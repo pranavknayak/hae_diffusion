@@ -1,0 +1,54 @@
+\documentclass{beamer}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{tikz}
+\setbeameroption{hide notes}
+\title{CS6360: ATML}
+\subtitle{Proof of Non-Triviality of $\rho$}
+
+\author{Pranav K Nayak}
+\institute{IIT Hyderabad}
+\date{}
+\begin{document}
+\begin{frame}
+  \titlepage
+\end{frame}
+\begin{frame}{The (Very Simplified) Proof Statement}
+ \begin{theorem}
+  If there exists group representation $\rho$, encoder $h$ and decoder $d$ that minimize the combined prediction and reconstruction losses, then $\rho$ is non-trivial
+ \end{theorem} 
+\end{frame}
+\begin{frame}{The Losses}
+  \begin{definition}[N-Step Prediction Loss]
+        $\mathcal{L}_{\text{pred}}^N(\rho, h) = \sum_{t = 2}^{N+1} || h(o_{t}) -  (\prod_{i = 1}^{t-1} \rho(g_{i}))h(o_0)||_2^2  $
+\end{definition}  
+\begin{definition}[N-Step Reconstruction Loss]
+  $\mathcal{L}_{\text{rec}}^N (\rho, h, d) = \sum_{t = t}^{N+1}||o_t - d((\prod_{i = 1}^{t-1}\rho(g_i))h(o_1))||_2^2 $
+\end{definition}
+  \begin{definition}[Combined Loss]
+    $\mathcal{L}_{\text{pred}}^N + \gamma \mathcal{L}_{\text{rec}}$ where $\gamma > 0$
+  \end{definition}
+\end{frame}
+\begin{frame}{The World-Statespace Assumption}
+  There's one minor assumption, namely that the world state manifold $W$ is diffeomorphic (via some function $m: W \rightarrow W*$) to a finite-dimensional real vector space $W*$, and that the group $G$ has a group representation $\rho* : G \rightarrow GL(W*)$. 
+\end{frame}
+\begin{frame}{The Lie-Algebra - Lie-Group Correspondence}
+  The Lie algebra of a lie group is its tangent space at the identity. One neat fact about this correspondence is that if we have a representation of the lie algebra in some vector space, then, through matrix exponentiation, we can arrive at the representation of the lie group on that same vector space. Thus, we can learn the representation of the group $\rho$ by proxy, instead learning the representation for the algebra $\phi$. 
+
+  The intuition behind this is that the representation of the algebra is a vector space, while that of the group can only be guaranteed to be a manifold. Learning a vector space through backpropagation is, the authors assert, easier than learning a manifold.
+\end{frame}
+\begin{frame}{Proof Outline}
+  \begin{itemize}
+  \item If $(\rho, h)$ minimizes only the prediction loss and $h$ is allowed to be non-injective, then $\rho$ can be trivial.
+  \item If $(\rho, h, d)$ minimizes the $0-$step reconstruction loss, then $h$ \textit{must} be injective.
+  \item If $(\rho, h, d)$ minimizes the combined loss, then the $0-$step reconstruction loss must be zero.
+  \end{itemize}
+  
+\end{frame}
+\begin{frame}{Proof}
+  
+\end{frame}
+\begin{frame}{Proof}
+  
+\end{frame}
+\end{document}

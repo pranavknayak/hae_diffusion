@@ -1,0 +1,17 @@
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
+\begin{thebibliography}{Luo22}
+
+\bibitem[Lee03]{lee2003introduction}
+J.M. Lee, \emph{Introduction to smooth manifolds}, Graduate Texts in
+  Mathematics, Springer, 2003.
+
+\bibitem[Luo22]{luo2022understanding}
+Calvin Luo, \emph{Understanding diffusion models: A unified perspective}, 2022.
+
+\end{thebibliography}

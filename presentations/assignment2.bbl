@@ -1,0 +1,18 @@
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
+\begin{thebibliography}{GQ20}
+
+\bibitem[Art98]{Artin:1998}
+Michael Artin, \emph{Algebra}, Birkh{\"a}user, 1998.
+
+\bibitem[GQ20]{gallier2020differential}
+J.~Gallier and J.~Quaintance, \emph{Differential geometry and lie groups: A
+  computational perspective}, Geometry and Computing, Springer International
+  Publishing, 2020.
+
+\end{thebibliography}

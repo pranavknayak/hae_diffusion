@@ -1,0 +1,123 @@
+\documentclass{beamer}
+\usefonttheme[onlymath]{serif}
+\usetheme{CambridgeUS}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{tikz}
+\setbeameroption{hide notes}
+\title{Disentangled Representations of the Diffusion Process}
+\subtitle{CS6360 - Assignment 6}
+
+\author{Pranav K Nayak}
+\institute{IIT Hyderabad}
+\date{}
+\begin{document}
+\begin{frame}{}
+  \titlepage
+\end{frame}
+\begin{frame}
+\tableofcontents
+\end{frame}
+\section{HAE Recap}
+\begin{frame}{The Homomorphism Autoencoder}
+The HAE involves samples of observation-action sequences $(o_1, g_1, ..., g_{N-1}, o_N)$. 
+
+\textbf{Purpose:} Learn representations of observations and actions with structural guarantees:
+\pause
+\begin{itemize}[<alert@+>]
+\item The representation of observations $h(o): \mathcal{O} \rightarrow Z$ is \textit{group-structured}. It preserves equivariance across commutative diagrams that are well-defined.
+\item The representation of actions $\rho(g): G \rightarrow GL(Z)$ is \textit{disentangled}. This requires that the space learned by $h$ is decomposable as $Z = Z_1 \oplus Z_2 \oplus Z_3 \oplus ... \oplus Z_n$.
+\item A decoder $d: Z \rightarrow \mathcal{O}$, included to ensure that $\rho$ isn't trivial.
+\end{itemize}
+\end{frame}
+\begin{frame}{The HAE Losses}
+  \begin{definition}[Latent Prediction Loss]
+    \[ 
+    \mathcal{L}_{\text{pred}}^N(\rho, h) = \sum_{t = 2 }^{N+1} \bigl|\bigl| h(o_t) - \bigl(\prod_{i = 1 }^{t - 1 }\rho(g_i) \bigr)h(o_1) \bigr|\bigr|
+    .\]
+    
+  \end{definition}
+  \begin{definition}[Reconstruction Loss]
+    \[ 
+    \mathcal{L}_{\text{rec}}^N(\rho, h, d) = \sum_{t = 1 }^{N+1} \bigl|\bigl| o_t - d \biggl(\bigl(\prod_{i \geq 1 }^{t - 1 }\rho(g_i) \bigr)h(o_1)\biggr) \bigr|\bigr|
+    .\]
+  \end{definition}
+   The total loss is a weighted linear combination of the above two. 
+\end{frame}
+\begin{frame}{Theoretical Guarantees}
+If certain conditions on the underlying world-state space and the group of actions are met, any representations $(\rho, h)$ learned by the HAE that minimize the expected loss are guaranteed to meet the structural requirements specified.
+\end{frame}
+\section{Diffusion Essentials}
+\begin{frame}{The Forward and Reverse Processes}
+  Diffusion consists of two processes:
+  \begin{itemize}
+    \item The forward process, characterized by the distribution $q(x_{t+1} | x_t)$
+    \item The reverse process, chatacterized by the distribution $p_{\theta}(x_{t-1} | x_t)$
+  \end{itemize}
+  Note that the reverse process is what is learned, via a neural network that outputs the parameters of the distribution. 
+\end{frame}
+\section{Structural Guarantees on Diffusion}
+\begin{frame}{Expanding the ELBO}
+For diffusion, the evidence is considered to be the entire run of decoded samples $p(\mathbf{x}_{0:T}) = p(\mathbf{x}_T)\prod_{t = 1 }^{T}p_{\theta}(\mathbf{x}_t-1 | \mathbf{x}_t) $.
+If we express this as the result of marginalizing the joint over $q$, we get:
+\begin{multline*}
+\log p(\mathbf{x}) \geq \mathbb{E}_{q(\mathbf{x}_{1} | x_0)}[\log p_{\theta}(x_0 | x_1)]  - D_{KL}(q(\mathbf{x}_T | \mathbf{x}_0) \\
+- \sum_{t = 2 }^{T} \mathbb{E}_{q(\mathbf{x}_T | \mathbf{x}_0)}[D_{KL}(q(\mathbf{x}_{t-1} | \mathbf{x}_{t}, \mathbf{x}_0) || p_{\theta}(\mathbf{x}_{t-1}|\mathbf{x}_t)] 
+\end{multline*} 
+The last term indicates that the ELBO can be maximized by making sure that the learned denoising distribution, $p_{\theta}(\mathbf{x}_{t-1}|\mathbf{x}_t)$ is as close as possible to the true denoising distribution, $q(\mathbf{x}_{t-1}|\mathbf{x}_t, \mathbf{x}_0)$. 
+\end{frame}
+\begin{frame}{$q(\mathbf{x}_{t-1}|\mathbf{x}_t, \mathbf{x}_0)$}
+  Using Bayes' rule:
+  \begin{equation*}
+  q(\mathbf{x}_{t-1}|\mathbf{x}_t, \mathbf{x}_0) = \frac{q(\mathbf{x}_t | \mathbf{x}_{t-1})q(\mathbf{x}_{t-1}|\mathbf{x}_0)}{q(\mathbf{x}_t | \mathbf{x}_0)}
+  \end{equation*}
+  From the reparameterization trick, we get that 
+  \[ 
+  q(\mathbf{x}_t|\mathbf{x}_{t-1}, \mathbf{x}_0) - \mathcal{N}(\mathbf{x}_t; \sqrt{\alpha_t}\mathbf{x}_{t-1}, (1-\alpha_t)\mathbf{I})
+  ,\]
+  \[ 
+  q(\mathbf{x}_{t-1}|\mathbf{x}_0) = \mathcal{N}(\mathbf{x}_{t-1}; \sqrt{\bar\alpha_{t-1}}\mathbf{x}_0, (1-\bar\alpha_{t-1})\mathbf{I})
+  ,\text{ and}
+\] 
+  \[ 
+  q(\mathbf{x}_t|\mathbf{x}_0) = \mathcal{N}(\mathbf{x}_t; \sqrt{\bar\alpha_t}\mathbf{x}_0, (1-\bar\alpha_t)\mathbf{I})
+  .\] 
+\end{frame}
+\begin{frame}%{$q(\mathbf{x}_{t-1}|\mathbf{x}_t, \mathbf{x}_0)$}
+  Plugging these into the expression for $q(\mathbf{x}_{t-1}|\mathbf{x}_t, \mathbf{x}_0)$, expanding the normals into their functional forms, tells us that $q(\mathbf{x}_{t-1} | \mathbf{x}_t, \mathbf{x}_0)$ is proportional to a normally distributed random variable, with mean $ \frac{\sqrt{\alpha_t}(1 - \bar \alpha_{t-1})\mathbf{x}_t + \sqrt{\bar \alpha_{t-1}}(1 - \alpha_t)\mathbf{x}_0}{1 - \bar \alpha_t}$\footnote{Detailed derivations are available at \cite{luo2022understanding}} and variance $\frac{(1 - \alpha_t)(1 - \bar \alpha_{t-1})}{1 - \bar \alpha_t}\mathbf{I}$.
+
+  This functional form allows us to impose Gaussian structure on the learned denoising distribution, $p_\theta(\mathbf{x}_{t-1}|\mathbf{x}_t)$. Note that the variance for the learned denoiser can be computed once the step-size scheme $\{\alpha_t\}$ is fixed.
+\end{frame}
+\begin{frame}{Denoising is Group-Structured}
+The mean of the learned denoising distribution cannot be directly computed, since we do not have access to $\mathbf{x}_0$ during denoising. Thus, the mean must come from a learned function $\mu_\theta$ of $\mathbf{x}$
+
+Therefore, we arrive at $p_\theta(\mathbf{x}_{t-1}|\mathbf{x}_{t}) = \mathcal{N}(\mathbf{x}_{t-1}; \mu_\theta(x_t), \sigma^2_t)$. Performing reparameterization, we get
+\[ 
+  \mathbf{x}_{t-1} = \mu_\theta(\mathbf{x}_t) + \sigma_t\epsilon
+, \text{~with~} \epsilon \sim \mathcal{N}(\epsilon; \mathbf{0}, \mathbf{I})
+\]
+Thus, we have that the learned denoising step is also an affine transformation, and thus is group-structured with respect to the space of images.
+\end{frame}
+\section{Symmetry-structured representations for diffusion}
+\begin{frame}{The World-State space}
+  If the observation space (the space of images) is $\mathbb{R}^{n \times n}$, then a simple candidate for the world-state space is $W = \mathbb{R}^{n^2}$, with the mapping $b$ between observation and world-state spaces being the linearization/rasterization operation. For such a mapping:
+  \begin{itemize}
+  \item Invertibility is guaranteed.
+  \item Diffeomorphism is not proven, but is likely.\footnote{If we set $W = \mathbb{R}^{n\times n}$, then this is guaranteed.\cite{lee2003introduction}}
+  \end{itemize}
+\end{frame}
+\begin{frame}{Group-Actions in the World-State space}
+  We need a space $W*$ that is diffeomorphic to $W$, but which permits a \textit{continuous}, \textit{injective} group representation $\rho*: G \rightarrow GL(W*)$. One such candidate is the space $\mathbb{R}^{n^2 + 1}$. In this space, the augmented-matrix form of affine transformations lies in $GL(W*)$, making it a perfectly valid group representation.
+\end{frame}
+\section{Conclusion}
+\begin{frame}{Conclusion}
+  Thus, all the requisite spaces and forms of transformations have been identified, and the result is that $\rho(g_i)$, the representation of the $i^{th}$ denoising step, is guaranteed to be group structured, and the representation $h(x_i)$ is guaranteed to be disentangled with respect to the decomposition of $\rho(g_i)$.
+\end{frame}
+\begin{frame}{references}
+  \bibliographystyle{amsalpha}
+  \bibliography{references.bib}
+\end{frame}
+\end{document}

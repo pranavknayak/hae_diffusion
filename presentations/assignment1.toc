@@ -1,0 +1,5 @@
+\beamer@sectionintoc {1}{Assignment 1}{2}{0}{1}
+\beamer@subsectionintoc {1}{1}{HAE Intro}{2}{0}{1}
+\beamer@subsectionintoc {1}{2}{Objective}{3}{0}{1}
+\beamer@sectionintoc {2}{Architecture and Loss Propositions}{4}{0}{2}
+\beamer@sectionintoc {3}{Theorem}{5}{0}{3}

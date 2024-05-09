@@ -1,0 +1,54 @@
+\begin{thebibliography}{8}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Hall(2015)]{hall2015lie}
+B.~Hall.
+\newblock \emph{Lie Groups, Lie Algebras, and Representations: An Elementary
+  Introduction}.
+\newblock Graduate Texts in Mathematics. Springer International Publishing,
+  2015.
+\newblock ISBN 9783319134673.
+
+\bibitem[Hall(2000)]{hall2000elementary}
+Brian~C. Hall.
+\newblock An elementary introduction to groups and representations, 2000.
+
+\bibitem[Higgins et~al.(2018)Higgins, Amos, Pfau, Racaniere, Matthey, Rezende,
+  and Lerchner]{higgins2018definition}
+Irina Higgins, David Amos, David Pfau, Sebastien Racaniere, Loic Matthey,
+  Danilo Rezende, and Alexander Lerchner.
+\newblock Towards a definition of disentangled representations, 2018.
+
+\bibitem[Higgins et~al.(2022)Higgins, Racanière, and
+  Rezende]{higgins2022symmetrybased}
+Irina Higgins, Sébastien Racanière, and Danilo Rezende.
+\newblock Symmetry-based representations for artificial and biological general
+  intelligence, 2022.
+
+\bibitem[Keurti et~al.(2023)Keurti, Pan, Besserve, Grewe, and
+  Schölkopf]{keurti2023homomorphism}
+Hamza Keurti, Hsiao-Ru Pan, Michel Besserve, Benjamin~F. Grewe, and Bernhard
+  Schölkopf.
+\newblock Homomorphism autoencoder -- learning group structured representations
+  from observed transitions, 2023.
+
+\bibitem[Lee(2013)]{lee2013introduction}
+J.M. Lee.
+\newblock \emph{Introduction to Smooth Manifolds}.
+\newblock Graduate Texts in Mathematics. Springer New York, 2013.
+\newblock ISBN 9780387217529.
+
+\bibitem[Luo(2022)]{luo2022understanding}
+Calvin Luo.
+\newblock Understanding diffusion models: A unified perspective, 2022.
+
+\bibitem[Sohl-Dickstein et~al.(2015)Sohl-Dickstein, Weiss, Maheswaranathan, and
+  Ganguli]{sohldickstein2015deep}
+Jascha Sohl-Dickstein, Eric~A. Weiss, Niru Maheswaranathan, and Surya Ganguli.
+\newblock Deep unsupervised learning using nonequilibrium thermodynamics, 2015.
+
+\end{thebibliography}

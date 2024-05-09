@@ -1,0 +1,88 @@
+
+\documentclass{beamer}
+\usetheme{boxes}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{CS6360: Assignment 4}
+\subtitle{Extensions}
+
+\author{Pranav K Nayak}
+\date{}
+\begin{document}
+\begin{frame}
+  \titlepage
+\end{frame}
+\section{Extending the Proof}
+\begin{frame}{The Lie Group Assumption}
+    The paper's central assumption is that the group of transformations acting on the world-state space forms a differentiable manifold (i.e. that it is a Lie group). This assumption is surprisingly lenient.
+    Transformations captured by this assumption include:
+    \begin{itemize}
+      \item All transformations representable through an invertible $n \times n$ matrix with determinant 1\footnote{$n \leq 2$} (i.e. the group $\mathbb{SL}(\mathbb{R}, n)$).
+    \item All rotations ($\mathbb{SO}(n)$).
+    \end{itemize}         
+    Note that matrix multiplication by $n \times n$ matrices cannot capture affine transformations in $\mathbb{R}^n$, but this can be taken care of via an injective mapping into the space $\mathbb{R}^{n+1}$, followed by a matrix multiplication. Similar to what is done when folding in a bias term into a matrix multiplication, :
+    \[ 
+      \mathbf{A}\mathbf{x} + \mathbf{b} \mapsto \mathbf{A'}\mathbf{x'}
+    .\]
+    
+  \end{frame}
+  \begin{frame}{The Group-Algebra Correspondence Assumption}
+    A relatively restrictive assumption is that the Lie group be closed and connected. This is required so that the mapping from the Lie algebra to the Lie group is invertible.
+    
+    However, this excludes a very important group of transformations, $\mathbb{GL}(\mathbb{R}, n)$, the \textbf{general linear group} consisting of all invertible $n \times n$ matrices.
+
+    If we relax this assumption, then the algebra captures the structure of the group only in a neighborhood around the identity. Incorporating the general linear group hinges on proving that the deviation between the group and its linear approximation (the algebra) is ``small enough" within a neighborhood of the identity, such that the neighborhood actually contains meaningfull transformations.
+  \end{frame}
+  \section{Incorporating Diffusion}
+  \begin{frame}{Diffusion}
+    
+    Similarities between the diffusion process and the HAE architecture are largely from two observations:
+    \begin{itemize}
+      \item The step-wise, iterative application of transformations.
+      \item The transformations can be composed in representation space to, in a single step, predict the encoding of a multi-step transformation without performing the actual encoding process.
+    \end{itemize}
+    \textbf{Obvious Question:} How well does diffusion \textit{actually} fit into this autoencoding/transformation representation learning framework?
+  \end{frame}
+  \begin{frame}{Additive Noise}
+    It is important to know if the addition of noise permits a group structure. If not, then it's unlikely that the two frameworks can be reconciled.
+
+    If additive noise is a group, then the structure of the manifold of the group should then be understood, to know if the group is a Lie group, and if it is closed and/or compact.
+
+    Understanding this manifold should be tractable, since additive noise is a translation operation, and thus lies on a subspace of the augmented matrix's space.
+
+  \end{frame}
+  \begin{frame}{HAE + Diffusion}
+    Three immediate directions for combining the two architectures:
+    \begin{itemize}
+      \item \textbf{Replace the translation group with the Gaussian group}. Repeat all experiments from the paper, and attempt to understand what the representation space looks like.
+      \item \textbf{Interleave the two processes}. Add a HAE to a diffusion model's architecture\footnote{\textit{how?}}, optimize for some combined goal.
+      \item \textbf{Train a HAE on a pretrained diffusion model}: Have the diffusion model go through either/both of the noising/denoising processes, and train the HAE to learn a representation corresponding to each stage of the process. This should give us a representation of the diffusion process, and with intelligent design it could give benefits similar to latent diffusion models\footnote{speculation}.
+    \end{itemize}
+  \end{frame}
+  % \begin{frame}{Diffusion's Latent Space (\textit{Very} Speculative)}
+  % If the representation space has continuous, possibly cyclical structure, then we could potentially predict the results of a diffusion process by performing a few denoising steps, isolating the path followed in the latent space of the HAE, and then walking down that path to the final result before mapping back into pixel space.
+  % \end{frame}
+
+  \begin{frame}{Variational HAE}
+    The authors of the paper assert that the encoder and decoder of the HAE be deterministic. One very simple way to extend the HAE is to make the autoencoding process variational, allowing greater control over the space of representations.
+  \end{frame}
+  \begin{frame}{Changing Losses}
+    The current formulation of the loss, namely 
+    \[ 
+      \sum_{t = 2}^{N+1} \biggl|\biggl| h(o_t) - \bigl(\prod_{i = 1}^{t-1}\rho(g_i)\bigr)h(o_1)   \biggr|\biggr|_2^2 + \sum_{t=1}^{N+1} \biggl|\biggl| o_t - d\biggl( \bigl(\prod_{i = 1}^{t-1}\rho(g_i)\bigr)h(o_1)\biggr)    \biggr|\biggr|_2^2
+    .\]
+    can be modified. The authors state that any positive function can be used in place of either $l_2$ norm, leading to two possible extensions:
+    \begin{itemize}
+    \item \textbf{Using distributional losses:} This also plays into the variational HAE idea.
+    \item \textbf{Discounting based loss:} If we can theoretically motivate earlier/later predictions/reconstructions being more important, than a discounting/compounding loss could be used, with different stages of the HAE's pass being weighted differently.
+    \end{itemize}
+  \end{frame}
+    
+  \begin{frame}{Piyushi's Ideas}
+    \begin{enumerate}
+      \item Inducing sparsity through submodularity instead of via the block-diagonal regularizer.
+      \item There might be benefits to framing latent OT in terms of the HAE architecture.
+    \end{enumerate}
+  \end{frame}
+\end{document}
